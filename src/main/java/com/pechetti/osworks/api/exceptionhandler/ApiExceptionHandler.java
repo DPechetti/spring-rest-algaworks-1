@@ -1,6 +1,6 @@
 package com.pechetti.osworks.api.exceptionhandler;
 
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,12 +18,26 @@ import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import com.pechetti.osworks.domain.exception.DomainException;
+import com.pechetti.osworks.domain.exception.EntityNotFoundMException;
 
 @ControllerAdvice
 public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 	
 	@Autowired
 	private MessageSource messageSource;
+	
+	@ExceptionHandler(EntityNotFoundMException.class)
+	public ResponseEntity<Object> handleEntityNotFound(DomainException ex, WebRequest request) {
+		
+		var status = HttpStatus.NOT_FOUND;
+		
+		var problem = new Problem();
+		problem.setStatus(status.value());
+		problem.setTitle(ex.getMessage());
+		problem.setDate(OffsetDateTime.now());
+		
+		return handleExceptionInternal(ex, problem, new HttpHeaders(), status, request);
+	}
 	
 	@ExceptionHandler(DomainException.class)
 	public ResponseEntity<Object> handleDomain(DomainException ex, WebRequest request) {
@@ -33,7 +47,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 		var problem = new Problem();
 		problem.setStatus(status.value());
 		problem.setTitle(ex.getMessage());
-		problem.setDate(LocalDateTime.now());
+		problem.setDate(OffsetDateTime.now());
 		
 		return handleExceptionInternal(ex, problem, new HttpHeaders(), status, request);
 	}
@@ -53,7 +67,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 		
 		var problem = new Problem();
 		problem.setStatus(status.value());
-		problem.setDate(LocalDateTime.now());
+		problem.setDate(OffsetDateTime.now());
 		problem.setTitle("Invalid data, try again!");
 		problem.setFileds(fields);
 		

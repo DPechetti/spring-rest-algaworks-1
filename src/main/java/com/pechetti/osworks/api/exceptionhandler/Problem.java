@@ -1,6 +1,6 @@
 package com.pechetti.osworks.api.exceptionhandler;
 
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -9,7 +9,7 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 @JsonInclude(Include.NON_NULL)
 public class Problem {
 	private Integer status;
-	private LocalDateTime date;
+	private OffsetDateTime date;
 	private String title;
 	private List<Field> fileds;
 	
@@ -42,10 +42,10 @@ public class Problem {
 	public void setStatus(Integer status) {
 		this.status = status;
 	}
-	public LocalDateTime getDate() {
+	public OffsetDateTime getDate() {
 		return date;
 	}
-	public void setDate(LocalDateTime date) {
+	public void setDate(OffsetDateTime date) {
 		this.date = date;
 	}
 	public String getTitle() {
